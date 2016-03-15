@@ -1380,7 +1380,11 @@ for solid CAD anyway.
                 })
                 .reduce(function(pv, v) {
                     return v.map(function(feat, i) {
-                        return feat + (pv === 0 ? 0 : pv[i]);
+                        if (feat instanceof CSG.Vector3D) {
+                            return feat.plus(pv === 0 ? CSG.Vector3D.Create(0, 0, 0) : pv[i]);
+                        } else {
+                            return feat + (pv === 0 ? 0 : pv[i]);
+                        }
                     });
                 }, 0);
             return (result.length == 1) ? result[0] : result;
@@ -2497,6 +2501,14 @@ for solid CAD anyway.
             return polygonArea;
         },
 
+        // After reducing this in getFeatures, this needs to be normalized by dividing by volume!
+        getVCentroid: function() {
+            var center = CSG.Vector3D.Create(0, 0, 0);
+            for (var i = 0; i < this.vertices.length - 2; i++) {
+                center = center.plus(this.vertices[0].pos.plus(this.vertices[i+1].pos).plus(this.vertices[i+2].pos)).dividedBy(4);
+            }
+            return center.times(this.getSignedVolume());
+        },
 
         // accepts array of features to calculate
         // returns array of results
@@ -2507,6 +2519,8 @@ for solid CAD anyway.
                     result.push(this.getSignedVolume());
                 } else if (feature == 'area') {
                     result.push(this.getArea());
+                } else if (feature == 'vcentroid') {
+                    result.push(this.getVCentroid());
                 }
             }, this);
             return result;

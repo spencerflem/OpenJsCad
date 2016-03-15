@@ -1113,7 +1113,10 @@ function main() {
   var volume = features[0];
   var area = features[1];
 
+  var vcentroid = cube.getFeatures("vcentroid");
+
   OpenJsCad.log("volume: "+volume+"; area: "+area);   // volume: 8; area: 24 
+  OpenJsCad.log("vcentroid is not normalized. Divide by volume to get centroid:" + vcentroid.dividedBy(volume));
   return cube;
 }
 </pre>
