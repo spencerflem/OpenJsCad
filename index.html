@@ -73,6 +73,54 @@ TODO: Header here
 <div id="viewer"></div>
 <br><br>
 <textarea id="code">
+!OpenSCAD
+faces = [
+    [
+        [1,1],
+        [1,0],
+        [1,0]
+    ],[
+        [0,1],
+        [1,1],
+        [1,0]
+    ],[
+        [0,1],
+        [1,1]
+    ]
+];
+
+voxelsize = 4;
+
+length = len(faces[0][0]);
+width = len(faces[1][0]);
+height = len(faces[0]);
+
+scale([voxelsize,voxelsize,voxelsize]) {
+    difference() {
+        cube(size=[length, width, height]);
+        for(face=[0:len(faces)-1]) {
+            for(y=[0:len(faces[face])-1]) {
+                for(x=[0:len(faces[face][y])]) {
+                    if(faces[face][y][x]==0) {
+                        //generalize to N-faces
+                        if(face==0){
+                            translate([0,x,(height-y-1)])cube([length,1,1]);
+                        }
+                        else if(face==1) {
+                            translate([x,0,(height-y-1)])cube([1,width,1]);
+                        }
+                        else if(face==2) {
+                            translate([x,(width-y-1),0])cube([1,1,height]);
+                        }
+                        else {
+                            echo("3 faces only for now ): ");
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 </textarea>
 <br>
 <input type="submit" value="Update" onclick="updateSolid(); return false;">
