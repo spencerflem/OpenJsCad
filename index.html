@@ -73,7 +73,6 @@ TODO: Header here
 <div id="viewer"></div>
 <br><br>
 <textarea id="code">
-!OpenSCAD
 faces = [
     [
         [1,1],
@@ -89,37 +88,46 @@ faces = [
     ]
 ];
 
+//DOES NOT ERROR CHECK MATRIX!
+//todo: n faces
+//smoothing?
+
 voxelsize = 4;
 
-length = len(faces[0][0]);
-width = len(faces[1][0]);
-height = len(faces[0]);
+function main() {
 
-scale([voxelsize,voxelsize,voxelsize]) {
-    difference() {
-        cube(size=[length, width, height]);
-        for(face=[0:len(faces)-1]) {
-            for(y=[0:len(faces[face])-1]) {
-                for(x=[0:len(faces[face][y])]) {
-                    if(faces[face][y][x]==0) {
-                        //generalize to N-faces
-                        if(face==0){
-                            translate([0,x,(height-y-1)])cube([length,1,1]);
-                        }
-                        else if(face==1) {
-                            translate([x,0,(height-y-1)])cube([1,width,1]);
-                        }
-                        else if(face==2) {
-                            translate([x,(width-y-1),0])cube([1,1,height]);
-                        }
-                        else {
-                            echo("3 faces only for now ): ");
-                        }
-                    }
-                }
-            }
-        }
-    }
+	length = faces[0][0].length;
+	width = faces[1][0].length;
+	height = faces[0].length;
+	
+	box = cube({size:[length, width, height]});
+	
+	for(face = 0; face < faces.length; face++) {
+		for(y = 0; y < faces[face].length; y++) {
+			for(x = 0; x < faces[face][y].length; x++) {
+				if(faces[face][y][x] === 0) {
+					if(face === 0){
+						cutbox = cube({size:[length, 1, 1]});
+						cutbox = cutbox.translate([0,x,(height-y-1)]);
+					}
+					else if(face === 1) {
+						cutbox = cube({size:[1, width, 1]});
+						cutbox = cutbox.translate([x,0,(height-y-1)]);
+					}
+					else if(face === 2) {
+						cutbox = cube({size:[1, 1, height]});
+						cutbox = cutbox.translate([x,(width-y-1),0]);
+					}
+					box = box.subtract(cutbox);
+				}
+			}
+		}
+	}
+	
+	box = box.scale([voxelsize,voxelsize,voxelsize]);
+	
+	return(box);
+	
 }
 </textarea>
 <br>
