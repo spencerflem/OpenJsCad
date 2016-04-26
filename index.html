@@ -69,10 +69,20 @@ function updateSolid()
 <title>OpenJsCad</title>  
 </head>
 <body onload="onload()">
-TODO: Header here
+<h1>Customizable monagram cubes!</h1>
+what a world to live in
+<br><br>
 <div id="viewer"></div>
 <br><br>
+The UI! How complete! Differentiate update buttons? I may have screwed that up.
+To check for okness, if x is modified: any y and z along the carved line must have > 1 pixel on that axis
+To check for being one solid unit: ?!?
+Put in js, code, or both?
+<input type="submit" value="Update" onclick="updateSolid(); return false;">
+<br><br>
+Edit the very code that defines the model:
 <textarea id="code">
+//faces as a param?
 faces = [
     [
         [1,1],
@@ -106,6 +116,7 @@ function main() {
 		for(y = 0; y < faces[face].length; y++) {
 			for(x = 0; x < faces[face][y].length; x++) {
 				if(faces[face][y][x] === 0) {
+					//translate as a function of corners?
 					if(face === 0){
 						var cutbox = CSG.cube({corner1:[0,0,0], corner2:[length, 1, 1]});
 						cutbox = cutbox.translate([0,x,(height-y-1)]);
@@ -125,6 +136,7 @@ function main() {
 	}
 	
 	box = box.scale([voxelsize,voxelsize,voxelsize]);
+	box = box.center();
 	
 	return(box);
 	
@@ -132,5 +144,7 @@ function main() {
 </textarea>
 <br>
 <input type="submit" value="Update" onclick="updateSolid(); return false;">
+<br><br>
+Copyright as footer, metion SPENTRONICS, and the VAST LEGION OF OPEN SOURCE CONTRIBUTERS that I  have SHAMLESSLY RIPPED OFF
 </body>
 </html>
