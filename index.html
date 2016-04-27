@@ -49,19 +49,127 @@
 
 <script>
 var gProcessor=null;
+var faces = [];
 
 // Show all exceptions to the user:
 OpenJsCad.AlertUserOfUncaughtExceptions();
 
-function onload()
-{
+function onload() {
+	updateSize();
 	gProcessor = new OpenJsCad.Processor(document.getElementById("viewer"));
+	updateSolid();
+}
+
+function toggleTile(face, x, y) {
+	if (faces[face][y][x] === 0) {
+		faces[face][y][x] = 1;
+	}
+	else {
+		faces[face][y][x] = 0;
+	}
+	displayFaces();
+}
+
+function updateSize() {
+	length = document.getElementById("length").value;
+	width = document.getElementById("width").value;
+	height = document.getElementById("height").value;
+	
+	var tempFaces = []
+	
+	//DRY this jazz!
+	tempFaces[0]=[];
+	for(var i=0; i < height; i++) {
+		tempFaces[0][i]=[];
+		for(var j=0; j < length; j++) {
+			tempFaces[0][i][j] = 1;
+		}
+	}
+	
+	tempFaces[1]=[];
+	for(var i=0; i < height; i++) {
+		tempFaces[1][i]=[];
+		for(var j=0; j < width; j++) {
+			tempFaces[1][i][j] = 1;
+		}
+	}
+	
+	tempFaces[2]=[];
+	for(var i=0; i < width; i++) {
+		tempFaces[2][i]=[];
+		for(var j=0; j < length; j++) {
+			tempFaces[2][i][j] = 1;
+		}
+	}
+	
+	faces = tempFaces;
+	displayFaces();
+}
+
+function displayFaces() {
+	//add VAR in for loops for jscad code 
+	x = document.getElementById("x");
+	y = document.getElementById("y");
+	z = document.getElementById("z");
+	
+	length = faces[0][0].length;
+	width = faces[1][0].length;
+	height = faces[0].length;
+	//DRY on 3 faces!
+	
+	xhtml = "";
+	for(var i=0; i < height; i++) {
+		xhtml += "<tr>";
+		for(var j=0; j < length; j++) {
+			var color = "blue"
+			if (faces[0][i][j] === 0) {
+				color = "white";
+			}
+			xhtml += "<td style=\"background-color:" + color + "\" onclick=\"javascript:toggleTile(" + 0 + ", " + j + ", " + i + ")\"></td>";
+		}
+		xhtml += "<tr>";
+	}
+	
+	yhtml = "";
+	for(var i=0; i < height; i++) {
+		yhtml += "<tr>";
+		for(var j=0; j < width; j++) {
+			var color = "blue"
+			if (faces[1][i][j] === 0) {
+				color = "white";
+			}
+			yhtml += "<td style=\"background-color:" + color + "\" onclick=\"javascript:toggleTile(" + 1 + ", " +  j + ", " + i + ")\"></td>";
+		}
+		yhtml += "</tr>";
+	}
+	
+	zhtml = "";
+	for(var i=0; i < width; i++) {
+		zhtml += "<tr>";
+		for(var j=0; j < length; j++) {
+			var color = "blue"
+			if (faces[2][i][j] === 0) {
+				color = "white";
+			}
+			zhtml += "<td style=\"background-color:" +  color + "\" onclick=\"javascript:toggleTile(" + 2 + ", " + j + ", " + i + ")\"></td>";
+		}
+		zhtml += "</tr>";
+	}
+	
+	x.innerHTML = xhtml;
+	y.innerHTML = yhtml;
+	z.innerHTML = zhtml;
+	
+	updateCode();
+}
+
+function updateCode() {
+	
 	updateSolid();
 }
 
 function updateSolid()
 {
-	//update code div with new faces array
 	gProcessor.setJsCad(document.getElementById('code').value);
 }
 </script>
@@ -74,10 +182,21 @@ what a world to live in
 <br><br>
 <div id="viewer"></div>
 <br><br>
-The UI! How complete! Differentiate update buttons? I may have screwed that up.
-To check for okness, if x is modified: any y and z along the carved line must have > 1 pixel on that axis
-To check for being one solid unit: ?!?
-Put in js, code, or both?
+length:
+<input id="length" type="number" value="10" onchange="updateSize()">
+width:
+<input id="width" type="number" value="10" onchange="updateSize()">
+height:
+<input id="height" type="number" value="10" onchange="updateSize()">
+<br><br>
+x:
+<table id="x" class="face"></table>
+<br>
+y:
+<table id="y" class="face"></table>
+<br>
+z:
+<table id="z" class="face"></table>
 <input type="submit" value="Update" onclick="updateSolid(); return false;">
 <br><br>
 Edit the very code that defines the model:
