@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<style>
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}   
+
+tr {
+}
+
+td {
+	width: 1em;
+	height: 1em;
+	//background-color:red;
+	border:.1em solid gray;
+}
+</style>
+<script>
+//onclick for input
+function onload() {
+	updateFaces();
+}
+
+function updateFaces() {
+	//add VAR in for loops for jscad code 
+	x = document.getElementById("x");
+	y = document.getElementById("y");
+	z = document.getElementById("z");
+	
+	length = document.getElementById("length").value;
+	width = document.getElementById("width").value;
+	height = document.getElementById("height").value;
+	
+	xhtml = "";
+	for(var i=0; i < height; i++) {
+		xhtml += "<tr>";
+		for(var j=0; j < length; j++) {
+			//onclick: change array, then update pixel colors
+			xhtml += "<td onclick=\'this.style.background-color=\"red\"\'></td>";
+		}
+		xhtml += "<tr>";
+	}
+	
+	yhtml = "";
+	for(var i=0; i < height; i++) {
+		yhtml += "<tr>";
+		for(var j=0; j < width; j++) {
+			yhtml += "<td></td>";
+		}
+		yhtml += "</tr>";
+	}
+	
+	zhtml = "";
+	for(var i=0; i < width; i++) {
+		zhtml += "<tr>";
+		for(var j=0; j < length; j++) {
+			zhtml += "<td></td>";
+		}
+		zhtml += "</tr>";
+	}
+	
+	x.innerHTML = xhtml;
+	y.innerHTML = yhtml;
+	z.innerHTML = zhtml;
+}
+</script>
+<title>UI TEST</title>  
+</head>
+<body onload="onload()">
+UI TEST
+<br><br>
+length:
+<input id="length", type="number", value="10", onchange="updateFaces()">
+width:
+<input id="width", type="number", value="10", onchange="updateFaces()">
+height:
+<input id="height", type="number", value="10", onchange="updateFaces()">
+<br><br>
+x:
+<table id="x", class="face"></table>
+<br>
+y:
+<table id="y", class="face"></table>
+<br>
+z:
+<table id="z", class="face"></table>
+</body>
+</html>
