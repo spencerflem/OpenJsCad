@@ -20,8 +20,27 @@ td {
 </style>
 <script>
 //onclick for input
+//inline css for color
 function onload() {
+	var faces = [
+		[
+			[1,1],
+			[1,0],
+			[1,0]
+		],[
+			[0,1],
+			[1,1],
+			[1,0]
+		],[
+			[0,1],
+			[1,1]
+		]
+	];
 	updateFaces();
+}
+
+function testFunc(that) {
+	that.style.backgroundColor="red";
 }
 
 function updateFaces() {
@@ -33,13 +52,14 @@ function updateFaces() {
 	length = document.getElementById("length").value;
 	width = document.getElementById("width").value;
 	height = document.getElementById("height").value;
+	//dont use these - use faces!
 	
 	xhtml = "";
 	for(var i=0; i < height; i++) {
 		xhtml += "<tr>";
 		for(var j=0; j < length; j++) {
 			//onclick: change array, then update pixel colors
-			xhtml += "<td onclick=\'this.style.background-color=\"red\"\'></td>";
+			xhtml += "<td style=\"background-color:blue\" onclick=\"javascript:testFunc(this)\"></td>";
 		}
 		xhtml += "<tr>";
 	}
@@ -73,19 +93,19 @@ function updateFaces() {
 UI TEST
 <br><br>
 length:
-<input id="length", type="number", value="10", onchange="updateFaces()">
+<input id="length" type="number" value="10" onchange="updateFaces()">
 width:
-<input id="width", type="number", value="10", onchange="updateFaces()">
+<input id="width" type="number" value="10" onchange="updateFaces()">
 height:
-<input id="height", type="number", value="10", onchange="updateFaces()">
+<input id="height" type="number" value="10" onchange="updateFaces()">
 <br><br>
 x:
-<table id="x", class="face"></table>
+<table id="x" class="face"></table>
 <br>
 y:
-<table id="y", class="face"></table>
+<table id="y" class="face"></table>
 <br>
 z:
-<table id="z", class="face"></table>
+<table id="z" class="face"></table>
 </body>
 </html>
