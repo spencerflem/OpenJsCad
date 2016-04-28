@@ -42,6 +42,21 @@
 	}
 
 	canvas { cursor: move; }
+	
+	table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	}   
+
+	tr {
+	}
+
+	td {
+		width: 1em;
+		height: 1em;
+		//background-color:red;
+		border:.1em solid gray;
+	}
 
 	</style>
 	
@@ -57,6 +72,7 @@ OpenJsCad.AlertUserOfUncaughtExceptions();
 function onload() {
 	gProcessor = new OpenJsCad.Processor(document.getElementById("viewer"));
 	updateSolid();
+	document.getElementsByClassName("parametersdiv")[0].getElementsByTagName("button")[0].style.visibility="hidden";
 	updateSize();
 }
 
@@ -67,7 +83,8 @@ function toggleTile(face, x, y) {
 	else {
 		params.faces[face][y][x] = 0;
 	}
-	displayFaces();
+	
+	updateDisplay();
 }
 
 function updateSize() {
@@ -109,10 +126,11 @@ function updateSize() {
 	params.height = height;
 	params.density = density;
 	params.faces = tempFaces;
-	displayFaces();
+	
+	updateDisplay();
 }
 
-function displayFaces() {
+function updateDisplay() {
 	//add VAR in for loops for jscad code 
 	x = document.getElementById("x");
 	y = document.getElementById("y");
@@ -167,16 +185,13 @@ function displayFaces() {
 	y.innerHTML = yhtml;
 	z.innerHTML = zhtml;
 	
-	updateCode();
+	document.getElementsByClassName("parameterstable")[0].getElementsByTagName("input")[0].value = JSON.stringify(params);
+	document.getElementsByClassName("parametersdiv")[0].getElementsByTagName("button")[0].click();
 }
 
-function updateCode() {
-	//UPDATE PARAMETERS INPUT: how?!?
-	updateSolid();
-}
+//update code undoes params fix
 
-function updateSolid()
-{
+function updateSolid() {
 	gProcessor.setJsCad(document.getElementById('code').value);
 }
 </script>
@@ -207,7 +222,6 @@ y:
 <br>
 z:
 <table id="z" class="face"></table>
-<input type="submit" value="Update" onclick="updateSolid(); return false;">
 <br><br>
 Edit the very code that defines the model:
 <textarea id="code">
